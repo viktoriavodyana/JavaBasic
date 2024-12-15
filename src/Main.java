@@ -1,5 +1,6 @@
 import lab.Lab1;
 import lab.Lab2;
+import lab.Lab3;
 
 import java.util.Scanner;
 
@@ -12,6 +13,8 @@ public class Main {
             executeLab1();
             System.out.println("Друга лабораторна");
             executeLab2();
+            System.out.println("Третя лабораторна");
+            executeLab3();
         } catch (Exception ex) {
             System.err.println("Error during execution");
             ex.printStackTrace();
@@ -44,5 +47,11 @@ public class Main {
         Lab2 lab2 = new Lab2(valueString, firstChar, lastChar);
         lab2.printVariant();
         lab2.execute();
+    }
+
+    private static void executeLab3() {
+        Lab3 lab3 = new Lab3();
+        lab3.printVariant();
+        lab3.execute();
     }
 }
