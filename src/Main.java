@@ -1,6 +1,7 @@
 import lab.Lab1;
 import lab.Lab2;
 import lab.Lab3;
+import lab.Lab4;
 
 import java.util.Scanner;
 
@@ -15,6 +16,8 @@ public class Main {
             executeLab2();
             System.out.println("Третя лабораторна");
             executeLab3();
+            System.out.println("Четверта лабораторна");
+            executeLab4();
         } catch (Exception ex) {
             System.err.println("Error during execution");
             ex.printStackTrace();
@@ -38,7 +41,7 @@ public class Main {
     }
 
     private static void executeLab2() {
-        System.out.println("Введіть речення:");
+        System.out.println("Введіть текст:");
         String valueString = SCANNER.nextLine();
         System.out.println("Введіть першу літеру");
         char firstChar = SCANNER.nextLine().charAt(0);
@@ -54,4 +57,17 @@ public class Main {
         lab3.printVariant();
         lab3.execute();
     }
+
+    private static void executeLab4() {
+        System.out.println("Введіть текст:");
+        String valueString = SCANNER.nextLine();
+        System.out.println("Введіть першу літеру");
+        char firstChar = SCANNER.nextLine().charAt(0);
+        System.out.println("Введіть другу літеру");
+        char lastChar = SCANNER.nextLine().charAt(0);
+        Lab4 lab4 = new Lab4(valueString, firstChar, lastChar);
+        lab4.printVariant();
+        lab4.execute();
+    }
+
 }
