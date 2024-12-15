@@ -7,16 +7,32 @@ public class Main {
     private static final Scanner SCANNER = new Scanner(System.in);
     public static void main(String[] args) {
         try {
-            System.out.println("Перша лабораторна");
-            executeLab1();
-            System.out.println("Друга лабораторна");
-            executeLab2();
-            System.out.println("Третя лабораторна");
-            executeLab3();
-            System.out.println("Четверта лабораторна");
-            executeLab4();
-            System.out.println("П'ята лабораторна");
-            executeLab5();
+            System.out.println("Введіть номер лабораторної роботи яку бажаєте запустити, або -1 - якщо всі по черзі.");
+            int labToExecute = SCANNER.nextInt();
+            if (labToExecute == -1) {
+                System.out.println("Перша лабораторна");
+                executeLab1();
+                System.out.println("Друга лабораторна");
+                executeLab2();
+                System.out.println("Третя лабораторна");
+                executeLab3();
+                System.out.println("Четверта лабораторна");
+                executeLab4();
+                System.out.println("П'ята лабораторна");
+                executeLab5();
+                System.out.println("Шоста лабораторна");
+                executeLab6();
+            } else {
+                switch (labToExecute) {
+                   case 1 -> executeLab1();
+                   case 2 -> executeLab2();
+                   case 3 -> executeLab3();
+                   case 4 -> executeLab4();
+                   case 5 -> executeLab5();
+                   case 6 -> executeLab6();
+                   default -> System.out.println("Неправильне значення");
+                }
+            }
         } catch (Exception ex) {
             System.err.println("Error during execution");
             ex.printStackTrace();
@@ -69,10 +85,15 @@ public class Main {
         lab4.execute();
     }
 
-
     public static void executeLab5() {
         Lab5 lab5 = new Lab5();
         lab5.printVariant();
         lab5.execute();
+    }
+
+    public static void executeLab6() {
+        Lab6 lab6 = new Lab6();
+        lab6.printVariant();
+        lab6.execute();
     }
 }
