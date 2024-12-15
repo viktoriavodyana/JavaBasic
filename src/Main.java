@@ -7,14 +7,14 @@ public class Main {
     private static final Scanner SCANNER = new Scanner(System.in);
     public static void main(String[] args) {
         try {
-//            System.out.println("Перша лабораторна");
-//            executeLab1();
-//            System.out.println("Друга лабораторна");
-//            executeLab2();
-//            System.out.println("Третя лабораторна");
-//            executeLab3();
-//            System.out.println("Четверта лабораторна");
-//            executeLab4();
+            System.out.println("Перша лабораторна");
+            executeLab1();
+            System.out.println("Друга лабораторна");
+            executeLab2();
+            System.out.println("Третя лабораторна");
+            executeLab3();
+            System.out.println("Четверта лабораторна");
+            executeLab4();
             System.out.println("П'ята лабораторна");
             executeLab5();
         } catch (Exception ex) {
