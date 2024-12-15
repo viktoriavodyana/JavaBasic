@@ -18,10 +18,7 @@ public class Lab4 implements LabInterface {
     public void execute() {
         Text myText = new Text(value);
 
-        myText.replaceTabsAndSpaces();  // Заміна табуляцій та пробілів
-
-        myText.removeLongestSubstring(startChar, endChar);  // Видалення підрядка між літерами
-
+        myText.removeLongestSubstring(startChar, endChar);
         System.out.println("Текст після видалення підрядка: " + myText);
     }
 
@@ -32,171 +29,162 @@ public class Lab4 implements LabInterface {
         System.out.println("C17 = " + scoreBookNumber % 17);
     }
 
-    // Клас для літер
-    class Letter {
-        private char value;
+    // Базовий абстрактний клас для всіх текстових елементів
+    abstract class TextElement {
+        protected String content;
 
-        public Letter(char value) {
-            this.value = value;
-        }
-
-        public char getValue() {
-            return value;
+        public TextElement(String content) {
+            this.content = content;
         }
 
         @Override
         public String toString() {
-            return String.valueOf(value);
+            return content;
         }
     }
 
-    // Клас для слова
-    class Word {
-        private List<Letter> letters;
+    // Клас для представлення букви
+    class Letter extends TextElement {
+        public Letter(char letter) {
+            super(String.valueOf(letter));
+        }
+    }
+
+    // Клас для представлення знаку пунктуації
+    class Punctuation extends TextElement {
+        public Punctuation(char punct) {
+            super(String.valueOf(punct));
+        }
+    }
+
+    // Клас для представлення слова
+    class Word extends TextElement {
+        private List<TextElement> elements;
 
         public Word(String word) {
-            letters = new ArrayList<>();
+            super(word);
+            this.elements = new ArrayList<>();
+            parseWord(word);
+        }
+
+        private void parseWord(String word) {
             for (char c : word.toCharArray()) {
-                letters.add(new Letter(c));
+                if (Character.isLetter(c)) {
+                    elements.add(new Letter(c));
+                } else if (!Character.isWhitespace(c)) {
+                    elements.add(new Punctuation(c));
+                }
             }
-        }
-
-        public List<Letter> getLetters() {
-            return letters;
-        }
-
-        public String getWord() {
-            String word = "";
-            for (Letter letter : letters) {
-                word += letter.getValue();  // Не використовуємо StringBuilder
-            }
-            return word;
         }
 
         @Override
         public String toString() {
-            return getWord();
+            StringBuilder sb = new StringBuilder();
+            for (TextElement element : elements) {
+                sb.append(element.toString());
+            }
+            return sb.toString();
         }
     }
 
-    // Клас для розділових знаків
-    class Punctuation {
-        private char value;
-
-        public Punctuation(char value) {
-            this.value = value;
-        }
-
-        public char getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-    }
-
-    // Клас для речення
-    class Sentence {
+    // Клас для представлення речення
+    class Sentence extends TextElement {
         private List<Word> words;
-        private List<Punctuation> punctuationMarks;
 
         public Sentence(String sentence) {
-            words = new ArrayList<>();
-            punctuationMarks = new ArrayList<>();
-            String[] sentenceParts = sentence.split(" ");
+            super(sentence);
+            this.words = new ArrayList<>();
+            parseSentence(sentence);
+        }
 
-            for (String part : sentenceParts) {
-                if (part.matches("[\\p{L}\\p{N}]+")) {
-                    words.add(new Word(part));
-                } else if (part.matches("[\\p{Punct}\\p{IsPunctuation}]")) {
-                    punctuationMarks.add(new Punctuation(part.charAt(0)));
+        private void parseSentence(String sentence) {
+            String[] wordArray = sentence.trim().split("\\s+");
+            for (String word : wordArray) {
+                if (!word.isEmpty()) {
+                    words.add(new Word(word));
                 }
             }
         }
 
-        public List<Word> getWords() {
-            return words;
-        }
+        public void removeLongestSubstring(char a, char b) {
+            int maxLength = 0;
+            String longestSubstring = "";
 
-        public List<Punctuation> getPunctuationMarks() {
-            return punctuationMarks;
+            // Знаходимо найдовшу підстроку між символами a і b
+            for (Word word : words) {
+                String wordStr = word.toString();
+                int startIndex = wordStr.indexOf(a);
+                while (startIndex != -1) {
+                    int endIndex = wordStr.indexOf(b, startIndex + 1);
+                    if (endIndex != -1) {
+                        String substring = wordStr.substring(startIndex, endIndex + 1);
+                        if (substring.length() > maxLength) {
+                            maxLength = substring.length();
+                            longestSubstring = substring;
+                        }
+                    }
+                    startIndex = wordStr.indexOf(a, startIndex + 1);
+                }
+            }
+
+            // Видаляємо знайдену підстроку з кожного слова
+            if (!longestSubstring.isEmpty()) {
+                for (int i = 0; i < words.size(); i++) {
+                    String wordStr = words.get(i).toString();
+                    wordStr = wordStr.replace(longestSubstring, "");
+                    words.set(i, new Word(wordStr));
+                }
+            }
         }
 
         @Override
         public String toString() {
-            String sentence = "";
-            for (Word word : words) {
-                sentence += word.getWord() + " ";  // Не використовуємо StringBuilder
-            }
-            for (Punctuation punctuation : punctuationMarks) {
-                sentence += punctuation.getValue();
-            }
-            return sentence.trim();
-        }
-
-        // Метод для видалення найбільшого підрядка між двома літерами
-        public void removeLongestSubstring(char start, char end) {
-            String sentenceText = this.toString();
-            int startIndex = sentenceText.indexOf(start);
-            int endIndex = sentenceText.lastIndexOf(end);
-
-            if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-                // Видаляємо найбільший підрядок між цими літерами
-                String modifiedSentence = sentenceText.substring(0, startIndex + 1) +
-                        sentenceText.substring(endIndex);
-                // Оновлюємо речення
-                this.words.clear();
-                this.punctuationMarks.clear();
-                String[] sentenceParts = modifiedSentence.split(" ");
-                for (String part : sentenceParts) {
-                    if (part.matches("[\\w]+")) {
-                        words.add(new Word(part));
-                    } else if (part.matches("[\\p{Punct}]")) {
-                        punctuationMarks.add(new Punctuation(part.charAt(0)));
-                    }
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < words.size(); i++) {
+                sb.append(words.get(i).toString());
+                if (i < words.size() - 1) {
+                    sb.append(" ");
                 }
             }
+            return sb.toString();
         }
     }
 
-    // Клас для тексту
-    class Text {
+    // Головний клас для представлення тексту
+    class Text extends TextElement {
         private List<Sentence> sentences;
 
         public Text(String text) {
+            super(text);
             this.sentences = new ArrayList<>();
-            String[] sentenceParts = text.split("(?<=\\.)"); // Розділяємо текст на речення
-            for (String part : sentenceParts) {
-                sentences.add(new Sentence(part.trim()));
+            parseText(text);
+        }
+
+        private void parseText(String text) {
+            String[] sentenceArray = text.split("[.!?]+");
+            for (String sentence : sentenceArray) {
+                if (!sentence.trim().isEmpty()) {
+                    sentences.add(new Sentence(sentence.trim()));
+                }
             }
         }
 
-        public List<Sentence> getSentences() {
-            return sentences;
+        public void removeLongestSubstring(char a, char b) {
+            for (Sentence sentence : sentences) {
+                sentence.removeLongestSubstring(a, b);
+            }
         }
 
         @Override
         public String toString() {
-            String text = "";
-            for (Sentence sentence : sentences) {
-                text += sentence.toString() + " ";  // Не використовуємо StringBuilder
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < sentences.size(); i++) {
+                sb.append(sentences.get(i).toString());
+                if (i < sentences.size() - 1) {
+                    sb.append(". ");
+                }
             }
-            return text.trim();
-        }
-
-        // Метод для заміни пробілів та табуляцій
-        public void replaceTabsAndSpaces() {
-            String replacedText = toString().replaceAll("\\s+", " "); // Заміна всіх пробілів і табуляцій на один пробіл
-            System.out.println("Текст після заміни пробілів: " + replacedText);
-        }
-
-        // Метод для видалення найбільшого підрядка
-        public void removeLongestSubstring(char start, char end) {
-            for (Sentence sentence : sentences) {
-                sentence.removeLongestSubstring(start, end);
-            }
+            return sb.toString();
         }
     }
 }

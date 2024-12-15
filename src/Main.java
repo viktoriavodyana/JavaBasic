@@ -9,6 +9,8 @@ public class Main {
         try {
             System.out.println("Введіть номер лабораторної роботи яку бажаєте запустити, або -1 - якщо всі по черзі.");
             int labToExecute = SCANNER.nextInt();
+            SCANNER.nextLine();
+
             if (labToExecute == -1) {
                 System.out.println("Перша лабораторна");
                 executeLab1();
@@ -41,8 +43,10 @@ public class Main {
 
     public static void executeLab1() {
         System.out.println("Введіть кількість рядків:");
+        System.out.flush();
         int rows = SCANNER.nextInt();
         System.out.println("Введіть кількість стовпців:");
+        System.out.flush();
         int columns = SCANNER.nextInt();
         System.out.println("Введіть консанту:");
         int constantMultiplier = SCANNER.nextInt();
@@ -59,9 +63,9 @@ public class Main {
         System.out.println("Введіть текст:");
         String valueString = SCANNER.nextLine();
         System.out.println("Введіть першу літеру");
-        char firstChar = SCANNER.nextLine().charAt(0);
+        char firstChar = SCANNER.next().charAt(0);
         System.out.println("Введіть другу літеру");
-        char lastChar = SCANNER.nextLine().charAt(0);
+        char lastChar = SCANNER.next().charAt(0);
         Lab2 lab2 = new Lab2(valueString, firstChar, lastChar);
         lab2.printVariant();
         lab2.execute();
@@ -77,9 +81,9 @@ public class Main {
         System.out.println("Введіть текст:");
         String valueString = SCANNER.nextLine();
         System.out.println("Введіть першу літеру");
-        char firstChar = SCANNER.nextLine().charAt(0);
+        char firstChar = SCANNER.next().charAt(0);
         System.out.println("Введіть другу літеру");
-        char lastChar = SCANNER.nextLine().charAt(0);
+        char lastChar = SCANNER.next().charAt(0);
         Lab4 lab4 = new Lab4(valueString, firstChar, lastChar);
         lab4.printVariant();
         lab4.execute();
